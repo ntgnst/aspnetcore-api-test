@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Test.UI.Controllers
 {
@@ -11,22 +8,23 @@ namespace Test.UI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
+        public IEnumerable<string> GetList()
+       {
             return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string GetById(string id)
         {
-            return "value";
+            return $"value = {id}";
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public JsonResult Post([FromBody]string value)
         {
+            return new JsonResult(value);
         }
 
         // PUT api/values/5
