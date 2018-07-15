@@ -32,6 +32,7 @@ namespace Test.Service
                 {
                     sensordata.UpdateTime = DateTime.UtcNow;
                     var result = _sensorDataContext.Sensordata.Update(sensordata).Entity;
+                    _sensorDataContext.SaveChanges();
                     return result;
                 }
                 catch (System.Exception ex)
@@ -51,6 +52,7 @@ namespace Test.Service
                     {
                         sensorListData.Add(_sensorDataContext.Update(f).Entity);
                     });
+                    _sensorDataContext.SaveChanges();
                     return sensorListData;
                 }
                 catch (System.Exception ex)
@@ -81,7 +83,9 @@ namespace Test.Service
                 {
                     sensordata.CreateTime = DateTime.UtcNow;
                     sensordata.UpdateTime = DateTime.UtcNow;
-                    return _sensorDataContext.Sensordata.Add(sensordata).Entity;
+                    var result = _sensorDataContext.Sensordata.Add(sensordata);
+                    _sensorDataContext.SaveChanges();
+                    return result.Entity;
                 }
                 catch (System.Exception ex)
                 {
@@ -95,7 +99,9 @@ namespace Test.Service
             {
                 try
                 {
-                    return _sensorDataContext.Sensordata.Remove(sensordata).Entity;
+                    var result = _sensorDataContext.Sensordata.Remove(sensordata).Entity;
+                    _sensorDataContext.SaveChanges();
+                    return result;
                 }
                 catch (System.Exception ex)
                 {

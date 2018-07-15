@@ -8,7 +8,7 @@ namespace Test.Data.Models
         public int Id { get; set; }
         public int Value1 { get; set; }
         public string Value2 { get; set; }
-        public DateTime CreateTime { get; set; }
-        public DateTime UpdateTime { get; set; }
+        public DateTime? CreateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
     }
 }
