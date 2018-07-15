@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Test.Data.Models;
 using Test.Interface;
+using Test.Interface.Result;
 
 namespace Test.Service
 {
@@ -15,126 +16,139 @@ namespace Test.Service
         {
             _logger = logger;
         }
-        public List<Sensordata> GetAll()
+        public Result<List<Sensordata>> GetAll()
         {
+            Result<List<Sensordata>> result;
             using (_sensorDataContext = new SensorDataContext())
             {
                 try
                 {
-                    return _sensorDataContext.Sensordata.ToList();
+                    result = new Result<List<Sensordata>>(_sensorDataContext.Sensordata.ToList());
+
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex.ToString(),ex);
+                    result = new Result<List<Sensordata>>(false, $"Service GetAll Method Ex: {ex.ToString()}");
+                    _logger.LogError(ex.ToString(), ex);
                     return null;
                 }
+                return result;
             }
         }
-        public Sensordata Update(Sensordata sensordata)
+        public Result<Sensordata> Update(Sensordata sensordata)
         {
+            Result<Sensordata> result;
             using (_sensorDataContext = new SensorDataContext())
             {
                 try
                 {
                     sensordata.UpdateTime = DateTime.UtcNow;
-                    var result = _sensorDataContext.Sensordata.Update(sensordata).Entity;
+                    result = new Result<Sensordata>(_sensorDataContext.Sensordata.Update(sensordata).Entity);
                     _sensorDataContext.SaveChanges();
-                    return result;
+                    
                 }
                 catch (Exception ex)
                 {
+                    result = new Result<Sensordata>(false, $"Service Update Method Ex: {ex.ToString()}");
                     _logger.LogError(ex.ToString(), ex);
-                    return null;
                 }
+                return result;
             }
         }
-        public List<Sensordata> UpdateMany(List<Sensordata> sensorDataList)
+        public Result<List<Sensordata>> UpdateMany(List<Sensordata> sensorDataList)
         {
+            Result<List<Sensordata>> result;
             List<Sensordata> sensorListData = new List<Sensordata>();
             using (_sensorDataContext = new SensorDataContext())
             {
                 try
                 {
-                    sensorDataList.ForEach(f=> 
+                    sensorDataList.ForEach(f =>
                     {
                         sensorListData.Add(_sensorDataContext.Update(f).Entity);
                     });
                     _sensorDataContext.SaveChanges();
-                    return sensorListData;
+                    result = new Result<List<Sensordata>>(sensorListData);
                 }
                 catch (Exception ex)
                 {
+                    result = new Result<List<Sensordata>>(false, $"Service UpdateMany Method Ex: {ex.ToString()}");
                     _logger.LogError(ex.ToString(), ex);
-                    return null;
                 }
+                return result;
             }
         }
-        public Sensordata GetById(int id)
+        public Result<Sensordata> GetById(int id)
         {
+            Result<Sensordata> result;
             using (_sensorDataContext = new SensorDataContext())
             {
                 try
                 {
-                    return _sensorDataContext.Sensordata.Where(w => w.Id == id).FirstOrDefault();
+                    result = new Result<Sensordata>(_sensorDataContext.Sensordata.Where(w => w.Id == id).FirstOrDefault());
                 }
                 catch (Exception ex)
                 {
+                    result = new Result<Sensordata>(false,$"Service GetById Method Ex: {ex.ToString()}");
                     _logger.LogError(ex.ToString(), ex);
-                    return null;
                 }
+                return result;
             }
         }
-        public Sensordata Create(Sensordata sensordata)
+        public Result<Sensordata> Create(Sensordata sensordata)
         {
+            Result<Sensordata> result;
             using (_sensorDataContext = new SensorDataContext())
             {
                 try
                 {
                     sensordata.CreateTime = DateTime.UtcNow;
                     sensordata.UpdateTime = DateTime.UtcNow;
-                    var result = _sensorDataContext.Sensordata.Add(sensordata);
+                    result = new Result<Sensordata>(_sensorDataContext.Sensordata.Add(sensordata).Entity);
                     _sensorDataContext.SaveChanges();
-                    return result.Entity;
                 }
                 catch (Exception ex)
                 {
+                    result = new Result<Sensordata>(false, $"Service Create Method Ex: {ex.ToString()}");
                     _logger.LogError(ex.ToString(), ex);
-                    return null;
                 }
+                return result;
             }
         }
-        public Sensordata Delete(Sensordata sensordata)
+        public Result<Sensordata> Delete(Sensordata sensordata)
         {
+            Result<Sensordata> result;
             using (_sensorDataContext = new SensorDataContext())
             {
                 try
                 {
-                    var result = _sensorDataContext.Sensordata.Remove(sensordata).Entity;
+                    result = new Result<Sensordata>(_sensorDataContext.Sensordata.Remove(sensordata).Entity);
                     _sensorDataContext.SaveChanges();
-                    return result;
                 }
                 catch (Exception ex)
                 {
+                    result = new Result<Sensordata>(false, $"Service Delete Method Ex: {ex.ToString()}");
                     _logger.LogError(ex.ToString(), ex);
-                    return null;
                 }
+                return result;
             }
         }
 
-        public List<Sensordata> GetByDate(DateTime startDate,DateTime endDate)
+        public Result<List<Sensordata>> GetByDate(DateTime startDate, DateTime endDate)
         {
+            Result<List<Sensordata>> result;
             using (_sensorDataContext = new SensorDataContext())
             {
                 try
                 {
-                    var result = _sensorDataContext.Sensordata.Where(s =>s.CreateTime >= startDate && s.CreateTime <= endDate).ToList();
-                    return result;
+                    result = new Result<List<Sensordata>>(_sensorDataContext.Sensordata.Where(s => s.CreateTime >= startDate && s.CreateTime <= endDate).ToList());
                 }
                 catch (Exception ex)
                 {
+                    result = new Result<List<Sensordata>>(false, $"Service GetByDate Method Ex: {ex.ToString()}");
                     _logger.LogError(ex.ToString(), ex);
-                    return null;
                 }
+                return result;
             }
         }
     }
