@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Test.Service;
 using Test.Interface;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Test.UI
 {
@@ -27,6 +28,8 @@ namespace Test.UI
         {
             services.AddMvc();
             services.AddTransient<ISensorDataService, SensorDataService>();
+            services.TryAdd(ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>());
+            services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(Logger<>)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

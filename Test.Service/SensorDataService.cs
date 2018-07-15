@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Test.Data.Models;
@@ -9,7 +10,11 @@ namespace Test.Service
     public class SensorDataService : ISensorDataService
     {
         private SensorDataContext _sensorDataContext;
-
+        private ILogger _logger;
+        public SensorDataService(ILogger<SensorDataService> logger)
+        {
+            _logger = logger;
+        }
         public List<Sensordata> GetAll()
         {
             using (_sensorDataContext = new SensorDataContext())
@@ -18,8 +23,9 @@ namespace Test.Service
                 {
                     return _sensorDataContext.Sensordata.ToList();
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex.ToString(),ex);
                     return null;
                 }
             }
@@ -35,8 +41,9 @@ namespace Test.Service
                     _sensorDataContext.SaveChanges();
                     return result;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex.ToString(), ex);
                     return null;
                 }
             }
@@ -55,8 +62,9 @@ namespace Test.Service
                     _sensorDataContext.SaveChanges();
                     return sensorListData;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex.ToString(), ex);
                     return null;
                 }
             }
@@ -69,8 +77,9 @@ namespace Test.Service
                 {
                     return _sensorDataContext.Sensordata.Where(w => w.Id == id).FirstOrDefault();
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex.ToString(), ex);
                     return null;
                 }
             }
@@ -87,8 +96,9 @@ namespace Test.Service
                     _sensorDataContext.SaveChanges();
                     return result.Entity;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex.ToString(), ex);
                     return null;
                 }
             }
@@ -103,8 +113,26 @@ namespace Test.Service
                     _sensorDataContext.SaveChanges();
                     return result;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex.ToString(), ex);
+                    return null;
+                }
+            }
+        }
+
+        public List<Sensordata> GetByDate(DateTime startDate,DateTime endDate)
+        {
+            using (_sensorDataContext = new SensorDataContext())
+            {
+                try
+                {
+                    var result = _sensorDataContext.Sensordata.Where(s =>s.CreateTime >= startDate && s.CreateTime <= endDate).ToList();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString(), ex);
                     return null;
                 }
             }

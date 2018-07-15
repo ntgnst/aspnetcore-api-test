@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using Test.Data.Models;
 using Test.Interface;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Test.UI.Controllers
 {
     [Route("api/[controller]/[action]")]
     public class ValueController : Controller
     {
         ISensorDataService _sensorDataService;
+        
         public ValueController(ISensorDataService sensorDataService)
         {
             _sensorDataService = sensorDataService;
@@ -51,6 +50,15 @@ namespace Test.UI.Controllers
         public JsonResult DeleteRecord([FromBody]Sensordata sensordata)
         {
             return new JsonResult(_sensorDataService.Delete(sensordata));
+        }
+
+        [HttpGet]
+        public JsonResult GetRecordsWithDate(string startDate, string endDate)
+        {
+            DateTime start, end;
+            start = Convert.ToDateTime(startDate);
+            end = Convert.ToDateTime(endDate);
+            return new JsonResult(_sensorDataService.GetByDate(start,end));
         }
 
     }

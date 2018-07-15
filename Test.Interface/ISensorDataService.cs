@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Test.Data.Models;
 
 namespace Test.Interface
@@ -11,5 +12,6 @@ namespace Test.Interface
         Sensordata GetById(int id);
         Sensordata Create(Sensordata sensordata);
         Sensordata Delete(Sensordata sensordata);
+        List<Sensordata> GetByDate(DateTime startDate, DateTime endDate);
     }
 }
