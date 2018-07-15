@@ -7,7 +7,6 @@ namespace Test.Interface.Result
     {
         private bool v;
         private ResultTypeEnum success;
-        private List<Sensordata> list;
 
         public bool IsSuccess { get; set; }
         public ResultTypeEnum ResultType { get; set; }

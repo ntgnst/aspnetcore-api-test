@@ -10,12 +10,40 @@ namespace Test.UI.Controllers
     public class ValueController : Controller
     {
         ISensorDataService _sensorDataService;
-        
+        private static string _id = "1";
+        private static string _pass = "1";
+        private static bool isAuthenticated = false;
         public ValueController(ISensorDataService sensorDataService)
         {
             _sensorDataService = sensorDataService;
         }
+        [HttpPost]
+        public JsonResult Login(string id , string pass)
+        {
+            if (id.Equals(_id) && pass.Equals(_pass))
+            {
+                isAuthenticated = true;
+                return new JsonResult("Yetkilendirme Başarılı.");
+            }
+            else
+            {
+                return new JsonResult("Yetkilendirme Başarısız.");
+            }
+        }
 
+        [HttpPost]
+        public JsonResult Logout()
+        {
+            if(isAuthenticated == true)
+            {
+                isAuthenticated = false;
+                return new JsonResult("Başarıyla çıkış yapıldı.");
+            }
+            else
+            {
+                return new JsonResult("Yetkisiz Erişim Reddedildi.");
+            }
+        }
         [HttpGet]
         public JsonResult GetList()
         {

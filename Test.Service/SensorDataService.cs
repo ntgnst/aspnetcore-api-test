@@ -42,10 +42,11 @@ namespace Test.Service
             {
                 try
                 {
+                    sensordata.CreateTime = _sensorDataContext.Sensordata.FirstOrDefault(f => f.Id == sensordata.Id).CreateTime;
                     sensordata.UpdateTime = DateTime.UtcNow;
-                    result = new Result<Sensordata>(_sensorDataContext.Sensordata.Update(sensordata).Entity);
+                    _sensorDataContext.Entry(sensordata).CurrentValues.SetValues(sensordata);
                     _sensorDataContext.SaveChanges();
-                    
+                    result = new Result<Sensordata>(sensordata);
                 }
                 catch (Exception ex)
                 {
